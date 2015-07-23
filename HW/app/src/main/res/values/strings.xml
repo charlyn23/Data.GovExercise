@@ -6,6 +6,8 @@
         <string name="action_settings">Settings</string>
         <string name="title">NYC Population by Borough, 2000 &amp; 2010</string>
         <string name="hint">*rotate pie chart for additional info</string>
+        <string name="notification">Notification</string>
+        <string name="notificationReceived">You\'ve received new message</string>
 
 
 </resources>

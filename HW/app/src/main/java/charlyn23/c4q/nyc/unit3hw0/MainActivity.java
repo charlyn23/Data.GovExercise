@@ -1,10 +1,18 @@
 package charlyn23.c4q.nyc.unit3hw0;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.eazegraph.lib.charts.PieChart;
@@ -21,8 +29,18 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         final DataGetter dataGetter =  new DataGetter();
 
+        Button notificationButton = (Button)findViewById(R.id.notificationButton);
         TextView hint = (TextView)findViewById(R.id.hint);
         hint.bringToFront();
+
+        notificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notify("Notification Alert", "You've received new message");
+            }
+        });
+
+
 
 
         final int bx2000 = dataGetter.getBX2000Pop();
@@ -61,6 +79,22 @@ public class MainActivity extends Activity {
         pieChart2000.startAnimation();
         pieChart2010.startAnimation();
 
+        //Notification
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.android_icon);
+        mBuilder.setContentTitle("Notification Alert, Click Me!");
+        mBuilder.setContentText("Hi, This is Android Notification Detail!");
+
+        Intent resultIntent = new Intent(this, NotificationView.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(NotificationView.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+
     }
 
     @Override
@@ -83,6 +117,17 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void Notify(String notificationTitle, String notificationMessage){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        @SuppressWarnings("deprecation")
+
+        Notification notification = new Notification(R.drawable.android_icon,"New Message", System.currentTimeMillis());
+        Intent notificationIntent = new Intent(this,NotificationView.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        notification.setLatestEventInfo(MainActivity.this, notificationTitle,notificationMessage, pendingIntent);
+        notificationManager.notify(9999, notification);
     }
 
 }
